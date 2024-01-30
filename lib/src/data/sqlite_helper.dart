@@ -6,10 +6,11 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 class SqliteHelper {
   // static final SqliteHelper sqliteHelper = SqliteHelper._initDb();
   static Database? _database;
+  static const tableName = 'financials';
+
   // SqliteHelper._initDb();
   Future<Database> get database async {
     if (_database != null) return _database!;
-    print('adwadwadwad');
     _database = await _initDb('financial.db');
     return _database!;
   }
@@ -19,20 +20,17 @@ class SqliteHelper {
       sqfliteFfiInit();
       final dbPath = await getDatabasesPath();
       final path = dbPath + filePath;
-      // final databaseFactory = databaseFactoryFfi;
-      // return await databaseFactory.openDatabase(path,
-      //     options:
-      //         OpenDatabaseOptions(onCreate: (db, version) => _initTable(db)));
       return await openDatabase(path,
-          onCreate: (db, version) => _initTable(db));
+          version: 1,
+          onCreate: (db, version) => _initTable(db, version));
     } on Exception catch (e) {
-      print(e.toString());
+        log(e.toString());
       rethrow;
     }
   }
 
-  static Future<void> _initTable(Database database) async {
-    await database.execute("""CREATE TABLE IF NOT EXISTS financials(
+  static Future<void> _initTable(Database database, int version) async {
+    await database.execute("""CREATE TABLE IF NOT EXISTS $tableName(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT,
         description TEXT,
@@ -40,6 +38,10 @@ class SqliteHelper {
         receivement INTEGER
       )
       """);
+  }
+
+  static Future<void> _dropTable(Database database, int version) async {
+    await database.execute("""DROP TABLE financials""");
   }
 
   // static Future<Database> dbConnection() async {
@@ -53,15 +55,20 @@ class SqliteHelper {
 
   Future<int> create(FinancialEntity financialEntity) async {
     final dbConnection = await database;
-    log(dbConnection.toString());
-    return await dbConnection.insert('financial', financialEntity.toMap());
+    // log(dbConnection.toString());
+    return await dbConnection.insert(tableName, financialEntity.toMap());
   }
 
   Future<List<FinancialEntity>> findAll() async {
     final dbConnection = await database;
     final financialsMap =
-        await dbConnection.query('financials', orderBy: 'date ASC');
+        await dbConnection.query(tableName, orderBy: 'date ASC');
     return financialsMap.map((item) => FinancialEntity.fromMap(item)).toList();
+  }
+
+  Future<int> remove(List<dynamic>? queryArgs) async {
+    final dbConnection = await database;
+    return dbConnection.delete(tableName);
   }
 
   // static Future<List<FinancialEntity>> listFinancials(sql.Database db) async {

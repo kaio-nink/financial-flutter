@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
-class Lancamentos extends StatefulWidget {
+class Registers extends StatefulWidget {
   final String title;
-  const Lancamentos({super.key, required this.title});
+  const Registers({super.key, required this.title});
 
   @override
-  State<Lancamentos> createState() => _LancamentosState();
+  State<Registers> createState() => _RegistersState();
 }
 
-class _LancamentosState extends State<Lancamentos> {
+class _RegistersState extends State<Registers> {
   final _formKey = GlobalKey<FormState>();
-  bool checkReceivement = false;
+  bool checkReceivement = true;
   var sqliteHelper = SqliteHelper();
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,13 @@ class _LancamentosState extends State<Lancamentos> {
                   decoration: const InputDecoration(label: Text("Data")),
                   keyboardType: TextInputType.datetime,
                   onSaved: (inputDate) {
-                    
+                    var splittedDate = splitDate(inputDate!);
+                    print(splittedDate);
+                    date = DateTime(
+                      int.parse(splittedDate[2]),
+                      int.parse(splittedDate[1]),
+                      int.parse(splittedDate[0]),
+                    );
                   },
                 ),
                 TextFormField(
@@ -72,24 +78,19 @@ class _LancamentosState extends State<Lancamentos> {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             FinancialEntity financialEntity = FinancialEntity(
-                                1, date, description, value, checkReceivement);
-                           var created = sqliteHelper.create(financialEntity);
-                           log(created.toString());
-                           var result = sqliteHelper.findAll();
-                           log(result.then((value) => value).toString());
+                                null,
+                                date,
+                                description,
+                                value,
+                                checkReceivement);
 
-                            // try {
-                            //   var db = await SqliteHelper.dbConnection();
-                            //   await SqliteHelper.createTables(db);
-                            //   await SqliteHelper.insertFinancial(db, financialEntity);
-                            //   var result = await SqliteHelper.listFinancials(db);
-                            //   print(result);
-                            //   await SqliteHelper.dbClose(db);
-                            // } on Exception catch (e) {
-                            //   print(e);
-                            // }
+                            await sqliteHelper.create(financialEntity);
 
-                            _dialogBuilder(context, financialEntity);
+                            var result = await sqliteHelper.findAll();
+                            log(result.toString());
+
+                            Navigator.of(context).pushReplacementNamed(
+                                '/');
                           }
                         },
                         child: const Text('Gravar'))
@@ -102,7 +103,11 @@ class _LancamentosState extends State<Lancamentos> {
   }
 }
 
-Future<void> _dialogBuilder(BuildContext context, FinancialEntity fin) {
+List<String> splitDate(String date) {
+  return date.split('/');
+}
+
+Future<void> _dialogBuilder(BuildContext context, String fin) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -110,11 +115,7 @@ Future<void> _dialogBuilder(BuildContext context, FinancialEntity fin) {
         title: const Text('Basic dialog title'),
         content: Column(
           children: [
-            Text(fin.id.toString()),
-            Text(fin.date.toIso8601String()),
-            Text(fin.description),
-            Text(fin.value.toString()),
-            Text(fin.receivement.toString())
+            Text(fin),
           ],
         ),
         actions: <Widget>[

@@ -1,4 +1,5 @@
 import 'package:financial_flutter/src/data/financial_entity.dart';
+import 'package:financial_flutter/src/data/sqlite_helper.dart';
 import 'package:flutter/material.dart';
 
 class FinancialTable extends StatelessWidget {
@@ -6,8 +7,13 @@ class FinancialTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var sqliteHelper = SqliteHelper();
     List<FinancialEntity> financials = [];
-    // getList().then((value) => tableList = value);
+
+    sqliteHelper.findAll().then((list) {
+      financials = list;
+    });
+    print(financials);
     return DataTable(
       columns: const [
         DataColumn(label: Text('Data')),

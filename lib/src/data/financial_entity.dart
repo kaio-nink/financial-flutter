@@ -1,5 +1,5 @@
 class FinancialEntity {
-  final int id;
+  final int? id;
   final DateTime date;
   final String description;
   final double value;
@@ -20,17 +20,17 @@ class FinancialEntity {
 
     FinancialEntity.fromMap(Map<String, dynamic> data) :
          id = data['id'] as int, 
-         date = DateTime.fromMillisecondsSinceEpoch(data['dateCreated'] as int), 
+         date =  DateTime.parse(data['date']), 
          description = data['description'] as String, 
          value = data['value'] as double, 
-         receivement = data['receivement'] as bool;
+         receivement = data['receivement'] == 1 ? true : false;
       
   
    Map<String, dynamic> toMap() => {
-      "date": date.millisecondsSinceEpoch, 
+      "date": date.toIso8601String(), 
       "description": description, 
       "value": value, 
-      "receivement": receivement 
+      "receivement": receivement ? 1 : 0, 
    }; 
 
 

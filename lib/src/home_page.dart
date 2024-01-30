@@ -1,6 +1,6 @@
 import 'package:financial_flutter/src/data/sqlite_helper.dart';
-import 'package:financial_flutter/src/financial_pie_chart.dart';
-import 'package:financial_flutter/src/financial_table.dart';
+import 'package:financial_flutter/src/widgets/financial_pie_chart.dart';
+import 'package:financial_flutter/src/widgets/financial_table.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               const FinancialTable(),
-              SizedBox(
+              const SizedBox(
                 width: 300,
                 height: 400,
-                child: const FinancialPieChart()),
+                child: FinancialPieChart()),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed('/register');

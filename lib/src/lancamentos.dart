@@ -1,4 +1,6 @@
 //import 'package:financial_flutter/src/data/financial_entity.dart';
+import 'dart:developer';
+
 import 'package:financial_flutter/src/data/financial_entity.dart';
 import 'package:financial_flutter/src/data/sqlite_helper.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +18,10 @@ class Lancamentos extends StatefulWidget {
 class _LancamentosState extends State<Lancamentos> {
   final _formKey = GlobalKey<FormState>();
   bool checkReceivement = false;
-
+  var sqliteHelper = SqliteHelper();
   @override
   Widget build(BuildContext context) {
-    String date = '29/01/2024';
+    DateTime date = DateTime.now();
     String description = '';
     double value = 0.0;
     return Scaffold(
@@ -31,10 +33,9 @@ class _LancamentosState extends State<Lancamentos> {
               children: [
                 TextFormField(
                   decoration: const InputDecoration(label: Text("Data")),
-                  initialValue: date,
                   keyboardType: TextInputType.datetime,
                   onSaved: (inputDate) {
-                    date = inputDate ?? DateTime.now().toString();
+                    
                   },
                 ),
                 TextFormField(
@@ -72,17 +73,21 @@ class _LancamentosState extends State<Lancamentos> {
                             _formKey.currentState!.save();
                             FinancialEntity financialEntity = FinancialEntity(
                                 1, date, description, value, checkReceivement);
+                           var created = sqliteHelper.create(financialEntity);
+                           log(created.toString());
+                           var result = sqliteHelper.findAll();
+                           log(result.then((value) => value).toString());
 
-                            var db = await SqliteHelper.dbConnection();
-                            try {
-                              // await SqliteHelper.createTables(db);
-                              await SqliteHelper.insertFinancial(db, financialEntity);
-                              var result = await SqliteHelper.listFinancials(db);
-                              print(result);
-                              await SqliteHelper.dbClose(db);
-                            } on Exception catch (e) {
-                              print(e);
-                            }
+                            // try {
+                            //   var db = await SqliteHelper.dbConnection();
+                            //   await SqliteHelper.createTables(db);
+                            //   await SqliteHelper.insertFinancial(db, financialEntity);
+                            //   var result = await SqliteHelper.listFinancials(db);
+                            //   print(result);
+                            //   await SqliteHelper.dbClose(db);
+                            // } on Exception catch (e) {
+                            //   print(e);
+                            // }
 
                             _dialogBuilder(context, financialEntity);
                           }
@@ -106,7 +111,7 @@ Future<void> _dialogBuilder(BuildContext context, FinancialEntity fin) {
         content: Column(
           children: [
             Text(fin.id.toString()),
-            Text(fin.date),
+            Text(fin.date.toIso8601String()),
             Text(fin.description),
             Text(fin.value.toString()),
             Text(fin.receivement.toString())

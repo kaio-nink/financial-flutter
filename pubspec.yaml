@@ -38,6 +38,7 @@ dependencies:
   sqflite_common_ffi_web: '>=0.1.0-dev.1'
   sqflite: ^2.3.2
   sqflite_common_ffi: ^2.3.2
+  fl_chart: ^0.66.1
 
 dev_dependencies:
   flutter_test:

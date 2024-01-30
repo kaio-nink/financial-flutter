@@ -4,18 +4,16 @@ import 'dart:developer';
 import 'package:financial_flutter/src/data/financial_entity.dart';
 import 'package:financial_flutter/src/data/sqlite_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
-class Registers extends StatefulWidget {
+class Register extends StatefulWidget {
   final String title;
-  const Registers({super.key, required this.title});
+  const Register({super.key, required this.title});
 
   @override
-  State<Registers> createState() => _RegistersState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _RegistersState extends State<Registers> {
+class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   bool checkReceivement = true;
   var sqliteHelper = SqliteHelper();
@@ -35,8 +33,7 @@ class _RegistersState extends State<Registers> {
                   decoration: const InputDecoration(label: Text("Data")),
                   keyboardType: TextInputType.datetime,
                   onSaved: (inputDate) {
-                    var splittedDate = splitDate(inputDate!);
-                    print(splittedDate);
+                    var splittedDate = inputDate!.split('/');
                     date = DateTime(
                       int.parse(splittedDate[2]),
                       int.parse(splittedDate[1]),
@@ -52,7 +49,6 @@ class _RegistersState extends State<Registers> {
                   decoration: const InputDecoration(label: Text("Descrição")),
                 ),
                 TextFormField(
-                  initialValue: value.toString(),
                   onSaved: (inputValue) {
                     value = double.parse(inputValue!);
                   },
@@ -72,7 +68,10 @@ class _RegistersState extends State<Registers> {
                 Row(
                   children: [
                     ElevatedButton(
-                        onPressed: () {}, child: const Text('Cancelar')),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacementNamed(
+                                '/');
+                        }, child: const Text('Cancelar')),
                     ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -101,10 +100,6 @@ class _RegistersState extends State<Registers> {
       ),
     );
   }
-}
-
-List<String> splitDate(String date) {
-  return date.split('/');
 }
 
 Future<void> _dialogBuilder(BuildContext context, String fin) {

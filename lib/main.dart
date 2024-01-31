@@ -1,18 +1,14 @@
-import 'dart:io';
-
 import 'package:financial_flutter/src/home_page.dart';
 import 'package:financial_flutter/src/register_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 void main() {
-  // if (Platform.isWindows || Platform.isLinux) {
-  //   // Initialize FFI
-  //   sqfliteFfiInit();
-  // }
-  
-  databaseFactory = databaseFactoryFfiWeb;
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWeb;
+  }
   runApp(const MyApp());
 }
 
@@ -31,9 +27,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => const HomePage(),
-        '/register': (BuildContext context) => const Register(title: 'Lançamentos'),
+        '/register': (BuildContext context) =>
+            const Register(title: 'Lançamentos'),
       },
     );
   }
 }
-

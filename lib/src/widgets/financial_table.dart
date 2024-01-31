@@ -20,28 +20,32 @@ class FinancialTable extends StatelessWidget {
           );
         }
         financials = snapshot.data as List<FinancialEntity>;
-        return DataTable(
-            columns: const [
-              DataColumn(label: Text('Data')),
-              DataColumn(label: Text('Descrição')),
-              DataColumn(label: Text('Valor')),
-            ],
-            rows: financials.map((item) => 
-            DataRow(
-            cells: [
-              DataCell(Text(formatDate(item.date))),
-              DataCell(Text(item.description)),
-              DataCell(Text('R\$ ${item.value}')),
-            ],
-          )).toList()
-            );
+        return Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: DataTable(
+            border: TableBorder.all(width: 1, color: Colors.black, borderRadius: BorderRadius.circular(3)),
+              columns: const [
+                DataColumn(label: Text('Data', style: TextStyle(fontWeight: FontWeight.bold))),
+                DataColumn(label: Text('Descrição',  style: TextStyle(fontWeight: FontWeight.bold))),
+                DataColumn(label: Text('Valor',  style: TextStyle(fontWeight: FontWeight.bold))),
+              ],
+              rows: financials.map((item) => 
+              DataRow(
+              cells: [
+                DataCell(Text(formatDate(item.date))),
+                DataCell(Text(item.description)),
+                DataCell(Text('R\$ ${item.value}')),
+              ],
+            )).toList()
+              ),
+        );
       }
     );
   }
 }
 
 String formatDate(DateTime date) {
-  return '${date.day}/${date.month}/${date.day}';
+  return '${date.day}/${date.month}/${date.year}';
 }
 
 List<DataRow> generateRow() {

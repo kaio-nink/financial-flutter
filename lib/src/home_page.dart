@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               const FinancialTable(),
-              const SizedBox(
-                width: 300,
-                height: 400,
-                child: FinancialPieChart()),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
+                child: FinancialPieChart(),
+              ),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed('/register');

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:financial_flutter/src/data/financial_entity.dart';
 import 'package:financial_flutter/src/data/sqlite_helper.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -45,13 +43,15 @@ class FinancialPieChart extends StatelessWidget {
                           value: receivement,
                           color: Colors.green,
                           radius: 100,
-                          title: '',
+                          title: '$receivement',
+                          titleStyle: const TextStyle(color: Colors.white)
                         ),
                         PieChartSectionData(
                           value: payment,
                           color: Colors.red,
                           radius: 100,
-                          title: '',
+                          title: '$payment',
+                          titleStyle: const TextStyle(color: Colors.white)
                         )
                       ]),
                   swapAnimationDuration:

@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:financial_flutter/src/data/financial_entity.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
@@ -77,7 +76,7 @@ class SqliteHelper {
           .map((item) => FinancialEntity.fromMap(item))
           .toList();
     } on Exception catch (e) {
-      print(e);
+      log(e.toString());
       return [];
     }
   }
@@ -87,20 +86,4 @@ class SqliteHelper {
     return dbConnection.delete(tableName);
   }
 
-  // static Future<List<FinancialEntity>> listFinancials(sql.Database db) async {
-  //   try {
-  //     List<Map<String, Object?>> financials = await db.query('financial');
-  //     // print(financials);
-  //     List<FinancialEntity> financialEntities = [];
-  //     for (var element in financials) {
-  //       // log(element['description'].toString());
-  //       FinancialEntity fin = FinancialEntity(element['id'] as int, element['date'] as String,
-  //           element['description'] as String, element['value'] as double, element['receivement'] as bool);
-  //       log('$fin\n');
-  //     }
-  //     return financialEntities;
-  //   } on Exception {
-  //     rethrow;
-  //   }
-  // }
 }

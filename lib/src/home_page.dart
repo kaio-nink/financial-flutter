@@ -1,7 +1,5 @@
-import 'package:financial_flutter/src/data/sqlite_helper.dart';
 import 'package:financial_flutter/src/widgets/financial_pie_chart.dart';
 import 'package:financial_flutter/src/widgets/financial_table.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 
